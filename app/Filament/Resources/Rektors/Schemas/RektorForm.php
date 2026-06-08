@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Rektors\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\FileUpload;
 use Filament\Schemas\Schema;
 
 class RektorForm
@@ -12,13 +13,31 @@ class RektorForm
     {
         return $schema
             ->components([
-                TextInput::make('nama')
-                    ->required(),
-                TextInput::make('jabatan')
-                    ->required(),
-                Textarea::make('image')
-                    ->required()
-                    ->columnSpanFull(),
-            ]);
+            TextInput::make('nama')
+                ->label('Nama Lengkap')
+                ->required()
+                ->maxLength(255)
+                ->placeholder('contoh: Prof. Dr. H. Maman Suherman, M.Pd.'),
+
+            TextInput::make('jabatan')
+                ->label('Jabatan')
+                ->required()
+                ->maxLength(255)
+                ->placeholder('contoh: Rektor / Wakil Rektor I / Wakil Rektor II')
+                ->helperText('Tuliskan jabatan struktural di pimpinan universitas.'),
+
+            FileUpload::make('image')
+                ->label('Foto')
+                ->image()
+                ->directory('rektors')
+                ->visibility('public')
+                ->imagePreviewHeight('200')
+                ->maxSize(2048)
+                ->required()
+                ->helperText('Upload foto formal dengan latar polos. Format: JPG, PNG. Maks 2MB.')
+                ->columnSpanFull(),
+        ])
+        ->columns(2);
+            
     }
 }

@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 
 class LecturesTable
@@ -14,27 +15,58 @@ class LecturesTable
     {
         return $table
             ->columns([
-                TextColumn::make('nama')
-                    ->searchable(),
-                TextColumn::make('nidn')
-                    ->searchable(),
-                TextColumn::make('pendidikan')
-                    ->searchable(),
-                TextColumn::make('jabatan')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('topik')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            ImageColumn::make('image')
+                ->label('Foto')
+                ->disk('public')
+                ->height(60)
+                ->circular(),
+
+            TextColumn::make('nama')
+                ->label('Nama Dosen')
+                ->searchable()
+                ->sortable()
+                ->weight('bold'),
+
+            TextColumn::make('nidn')
+                ->label('NIDN')
+                ->searchable()
+                ->copyable()
+                ->copyMessage('NIDN disalin!')
+                ->toggleable(),
+
+            TextColumn::make('jabatan')
+                ->label('Jabatan')
+                ->searchable()
+                ->sortable()
+                ->badge()
+                ->color('success'),
+
+            TextColumn::make('email')
+                ->label('Email')
+                ->searchable()
+                ->copyable()
+                ->copyMessage('Email disalin!')
+                ->icon('heroicon-o-envelope'),
+
+            TextColumn::make('topik')
+                ->label('Bidang Keahlian')
+                ->searchable()
+                ->limit(40)
+                ->tooltip(fn (?string $state): ?string => $state)
+                ->toggleable(),
+
+            TextColumn::make('pendidikan')
+                ->label('Pendidikan')
+                ->searchable()
+                ->limit(40)
+                ->tooltip(fn (?string $state): ?string => $state)
+                ->toggleable(isToggledHiddenByDefault: true),
+
+            TextColumn::make('created_at')
+                ->label('Ditambahkan')
+                ->dateTime('d M Y H:i')
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -46,6 +78,7 @@ class LecturesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('nama', 'asc');
     }
 }

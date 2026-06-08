@@ -15,32 +15,42 @@ class FootersTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image'),
-                TextColumn::make('link_instagram')
-                    ->searchable(),
-                TextColumn::make('link_youtube')
-                    ->searchable(),
-                TextColumn::make('link_linkedin')
-                    ->searchable(),
-                TextColumn::make('link_facebook')
-                    ->searchable(),
-                TextColumn::make('alamat')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('wa')
-                    ->searchable(),
-                TextColumn::make('link_gmaps')
-                    ->searchable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+            ImageColumn::make('image')
+                ->label('Logo')
+                ->disk('public')
+                ->height(50),
+
+            TextColumn::make('alamat')
+                ->label('Alamat')
+                ->limit(50)
+                ->tooltip(fn (?string $state): ?string => $state)
+                ->searchable(),
+
+            TextColumn::make('email')
+                ->label('Email')
+                ->searchable()
+                ->copyable()
+                ->copyMessage('Email disalin!')
+                ->icon('heroicon-o-envelope'),
+
+            TextColumn::make('wa')
+                ->label('WhatsApp')
+                ->copyable()
+                ->copyMessage('Nomor WA disalin!')
+                ->icon('heroicon-o-chat-bubble-left-right')
+                ->prefix('+62 '),
+
+            TextColumn::make('link_instagram')
+                ->label('Instagram')
+                ->url(fn ($record) => $record->link_instagram, true)
+                ->icon('heroicon-o-link')
+                ->formatStateUsing(fn (?string $state): string => $state ? 'Buka' : '-')
+                ->color('info'),
+
+            TextColumn::make('updated_at')
+                ->label('Diperbarui')
+                ->dateTime('d M Y H:i')
+                ->sortable(),
             ])
             ->filters([
                 //
@@ -52,6 +62,7 @@ class FootersTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('updated_at', 'desc');
     }
 }
