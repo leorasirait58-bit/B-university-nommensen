@@ -16,3 +16,4 @@ class Visimisi extends Model
         'image' => 'array',
     ];
 }
+
